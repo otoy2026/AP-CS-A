@@ -11,7 +11,7 @@ package com.mycompany.studentmain;
 
 // PLANNING:
 // This project has 3 classes: StudentMain, Student, and Course.
-// StudentMain uses the Student class to create a student object 
+// StudentMain uses the Student class to create a student object and print details
 // The Student class uses the Course class to set test scores
 // Student class also uses Course class to get and do calculations with test scores
 
