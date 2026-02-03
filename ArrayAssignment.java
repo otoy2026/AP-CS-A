@@ -13,20 +13,21 @@ public class ArrayAssignment {
 
         String[] weekDays = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
 
-        System.out.println("All days of the week:");
+        System.out.println("All days:");
         for (String day : weekDays) {
             System.out.println(day);
         }
 
-        String[] weekdaysOnly = new String[5];
-
-        for (int i = 0; i < 5; i++) {
-            weekdaysOnly[i] = weekDays[i + 1];
+        //create new array with smaller size
+        String[] weekDays2 = new String[5];
+        //create for loop that copies correct week days over
+        for (int copy=0; copy<5; copy++) {
+            weekDays2[copy] = weekDays[copy + 1];
         }
 
-        System.out.println("\nWeekdays only:");
-        for (String day : weekdaysOnly) {
-            System.out.println(day);
+        System.out.println("\nWeekdays:");
+        for (String day : weekDays2) {
+            System.out.println(day);    
         }
     }
 }
