@@ -44,10 +44,10 @@ public class TwoDimensionArrays {
         System.out.println("Hand " + h + ":");
     
     for (int card = 0; card < 5; card++) {
-        int suitIdx = deck[count][0];
-        int numIdx = deck[count][1];
+        int suit1 = deck[count][0];
+        int num1 = deck[count][1];
         
-        System.out.println(number[numIdx] + " of " + suit[suitIdx]);
+        System.out.println(number[num1] + " of " + suit[suit1]);
         count++; 
     }
     System.out.println(); 
