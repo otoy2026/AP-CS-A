@@ -1,0 +1,24 @@
+Before takeoff, would you like to verify your flight path with Air Traffic Control? Type 1 to verify, type 2 to takeoff immediately.-
+
+Air Traffic Control has approved your flight path. You proceed to the runway, and successfully take off.-
+
+You proceed to the runway without double checking your flight path, and you successfully take off.-
+
+The weather today is clear and sunny, and you steadily begin elevating to cruising altitude. But as you start to relax a little, you see something coming in the distance.~BIRDS!!! It's too late to avoid them, and you hit the birds head on. The cockpit lights up with error messages, you've lost your right engine!~You can either type 1 to reduce engine speed and aim for a glide, or you can type 2 to go full throttle in both engines and attempt to get the birds' unstuck.-
+
+The weather today is rather stormy, so while elevating to cruising altitude you start to check your weather instruments to make sure the you know where you'll be hitting turbulence.~But before you can get a full reading, the plane hits a massive patch of bumpy air. The entire cockpit shakes and lights up with error messages, a flap on your right wing came loose!~Type 1 to call ATC on the radio to report your situation, or type 2 to keep flying without reporting.-
+
+You slowly let off the throttle, hoping to glide for a little until the problem solves itself. Type 1 to call ATC on the radio to report your situation, or type 2 to keep flying without reporting.-
+
+Huh. It seems like your radio controls also got messed up, because you can't seem to get ahold of ATC. It looks like you're gonna have to fix it yourself.~To fix the radio controls, correctly identify the product of the following operation: 11 * 12 = ?-
+
+Correct! You successfully fixed your radio controls, and call in to ATC to report your issue.-
+
+Incorrect. Looks like you're on your own for the rest of this flight.-
+
+You continue ascending to cruising altitude, but you hear a noise on your right wing getting louder and louder, until you look over and see the loose flap almost completely dislodged.~As you're inspecting the flap from the cockpit, it fully detaches and flies off the wing. Uh oh.-
+
+You continue ascending to cruising altitude, but you notice that your right engine still has an error.
+
+
+
