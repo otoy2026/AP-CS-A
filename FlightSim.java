@@ -1,7 +1,7 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
+ * Flight Simulator
  */
+
 package flightsim;
 
 /**
@@ -17,54 +17,50 @@ public class FlightSim {
 
     public static void main(String[] args) {
 
-        //welcome message
-        System.out.println("===========================================");
-        System.out.println("       WELCOME TO FLIGHT SIMULATOR         ");
-        System.out.println("===========================================");
+        System.out.println("""
+                      ======================================
+                           Welcome to Flight Simulator.
+                          ==============================""");
 
-        //create list of flights
+        //load flight paths
         Path path1 = Paths.get("Info", "flights.txt");
-        ArrayList<FlightPath> flights = new ArrayList<>();
+        ArrayList<flightPath> flights = new ArrayList<>();
 
         if (Files.exists(path1)) {
             try (Scanner scan1 = new Scanner(path1)) {
                 while (scan1.hasNextLine()) {
-                    String line = scan1.nextLine().trim();
-                    if (line.isEmpty()) continue;
+                    String line = scan1.nextLine();
+                    if (line.trim().isEmpty()) continue;
                     String[] parts = line.split(",");
-                    //add flight paths
-                    flights.add(new FlightPath(
-                        parts[0], parts[1], parts[2],
-                        parts[3],
-                        Integer.parseInt(parts[4]),
-                        Integer.parseInt(parts[5])
-                    ));
+                    String company    = parts[0];
+                    String aircraft   = parts[1];
+                    String startPoint = parts[2];
+                    String endPoint   = parts[3];
+                    int miles         = Integer.parseInt(parts[4]);
+                    int elapsed       = Integer.parseInt(parts[5]);
+                    flights.add(new flightPath(company, aircraft, startPoint, endPoint, miles, elapsed));
                 }
             } catch (IOException e) {
                 System.err.println("File not found: " + e.getMessage());
             }
         }
 
-        if (flights.isEmpty()) {
-            System.err.println("No flight data found. Exiting.");
-            return;
-        }
-
         Random rand = new Random();
-        FlightPath todaysFlight = flights.get(rand.nextInt(flights.size()));
+        int randomFlight = rand.nextInt(flights.size());
+        flightPath todaysFlight = flights.get(randomFlight);
         System.out.println(todaysFlight);
 
-        //create prompts list
+        //load prompt list
         Path path2 = Paths.get("Info", "prompts.txt");
-        ArrayList<PromptFormat> prompts = new ArrayList<>();
+        ArrayList<promptFormat> prompts = new ArrayList<>();
 
         if (Files.exists(path2)) {
             try (Scanner scan2 = new Scanner(path2)) {
-                scan2.useDelimiter("-");
+                scan2.useDelimiter("###");
                 while (scan2.hasNext()) {
                     String content = scan2.next().trim();
                     if (!content.isEmpty()) {
-                        prompts.add(new PromptFormat(content));
+                        prompts.add(new promptFormat(content));
                     }
                 }
             } catch (IOException e) {
@@ -72,366 +68,215 @@ public class FlightSim {
             }
         }
 
-        //game objects
-        FlightState state   = new FlightState(todaysFlight);
-        AircraftHealth ac   = new AircraftHealth();
-        NavStatus nav       = new NavStatus();
-        Scanner input       = new Scanner(System.in);
+        Scanner input = new Scanner(System.in);
 
-        //being phase1: pre-takeoff
+        //pre-takeoff
         System.out.println(prompts.get(0));
-        int choice1 = safeIntInput(input);
-
+        int choice1 = input.nextInt();
+        boolean verifiedWithATC;
         if (choice1 == 1) {
-            System.out.println(prompts.get(1));
-            nav.atcContactEstablished = true;
+            System.out.println(prompts.get(1)); 
+            verifiedWithATC = true;
         } else {
-            System.out.println(prompts.get(2));
+            System.out.println(prompts.get(2)); 
+            verifiedWithATC = false;
         }
 
-        //begin phase2: weather
-        int weatherRoll = rand.nextInt(2);
+        //random weather/event
+        int rand1 = rand.nextInt(3);
 
-        if (weatherRoll == 1) {
-            //clear weather, bird strike, lost engine
+        if (rand1 == 1) {
+
+            //clear weather
             System.out.println(prompts.get(3));
-            ac.sys.rightEngineFail();
-            state.addEvent("Right engine lost to bird strike.");
-
-            int choice2 = safeIntInput(input);
+            int choice2 = input.nextInt();
 
             if (choice2 == 1) {
-                //glide, lost radio, puzzle
+                //glide
                 System.out.println(prompts.get(5));
-                int choice3 = safeIntInput(input);
+                int choice3 = input.nextInt();
 
                 if (choice3 == 1) {
-                    //try radio
+                    //attempt to fix radio
                     System.out.println(prompts.get(6));
-                    int answer = safeIntInput(input);
+                    int answer = input.nextInt();
 
                     if (answer == 132) {
-                        System.out.println(prompts.get(7));
-                        nav.atcContactEstablished = true;
-                        state.addEvent("Radio fixed. ATC contacted.");
-
-                        System.out.println(prompts.get(10));
-                        int choice4 = safeIntInput(input);
-
-                        if (choice4 == 1) {
-                            System.out.println(prompts.get(11));
-                            int landingRoll = rand.nextInt(2);
-                            if (landingRoll == 1 || !ac.sys.rightEngine) {
-                                System.out.println(prompts.get(12));
-                                state.land = true;
-                            } else {
-                                System.out.println(prompts.get(13)); 
-                                ac.body.fuselageHealth -= 40;
-                                state.land = true;
-                            }
-                        } else {
-                            System.out.println(prompts.get(14)); 
-                            phase3ContinueFlight(input, rand, state, ac, nav, prompts);
-                        }
-
+                        System.out.println(prompts.get(7));  //correct answer
+                        System.out.println(prompts.get(10)); //atc guides
+                        attemptLanding(input, rand, prompts); //landing gear check
                     } else {
-                        System.out.println(prompts.get(8));
-                        state.addEvent("Radio repair failed. Flying blind.");
-                        phase3NoCommunications(input, rand, state, ac, prompts);
+                        System.out.println(prompts.get(8));  //incorrect answer
+                        System.out.println(prompts.get(11)); //independent choice
+                        int choice4 = input.nextInt();
+                        if (choice4 == 1) {
+                            attemptLanding(input, rand, prompts);
+                        } else {
+                            System.out.println(prompts.get(14)); //keep flying, engine fails
+                        }
                     }
 
                 } else {
-                    System.out.println(prompts.get(9)); 
-                    phase3NoCommunications(input, rand, state, ac, prompts);
+                    //no radio option
+                    System.out.println(prompts.get(9));  //engine error
+                    System.out.println(prompts.get(11)); //attempt landing choice
+                    int choice4 = input.nextInt();
+                    if (choice4 == 1) {
+                        attemptLanding(input, rand, prompts);
+                    } else {
+                        System.out.println(prompts.get(14)); //keep flying, engine fails
+                    }
                 }
 
             } else if (choice2 == 2) {
-                System.out.println(prompts.get(15)); 
-                ac.sys.leftEngineFail();
-                state.addEvent("Left engine also failed from over-throttle.");
-                endingCrash(state, ac);
+                //full throttle option
+                System.out.println(prompts.get(15));
+                int choice3 = input.nextInt();
+                if (choice3 == 1) {
+                    attemptLanding(input, rand, prompts);
+                } else {
+                    System.out.println(prompts.get(13)); //push to far, crash
+                }
 
             } else {
                 System.out.println("Invalid input.");
             }
 
-        } else {
-            //stormy weather, flap damaged
-            System.out.println(prompts.get(4));
-            ac.body.rightFlapHealth = 30;
-            state.addEvent("Right wing flap partially detached.");
+        } else if (rand1 == 0) {
 
-            int choice2 = safeIntInput(input);
+            //stormy weather, flap comes loose
+            System.out.println(prompts.get(4));
+            int choice2 = input.nextInt();
 
             if (choice2 == 1) {
-                if (nav.atcContactEstablished) {
-                    System.out.println(prompts.get(16)); 
-                    nav.diversionApproved = true;
+                if (verifiedWithATC) {
+                    System.out.println(prompts.get(16)); //atc fast reponse
                 } else {
-                    System.out.println(prompts.get(17));
-                    System.out.println("Enter the squawk code ATC just gave you (type 7700): ");
-                    int squawk = safeIntInput(input);
-                    if (squawk == 7700) {
-                        System.out.println(prompts.get(18));  
-                        nav.diversionApproved = true;
-                    } else {
-                        System.out.println(prompts.get(19)); 
-                    }
+                    System.out.println(prompts.get(17)); //atc slow response
                 }
-
-                if (nav.diversionApproved) {
-                    System.out.println(prompts.get(20));  
-                    int choice3 = safeIntInput(input);
-                    if (choice3 == 1) {
-                        System.out.println(prompts.get(21));  
-                        state.land = true;
-                    } else {
-                        System.out.println(prompts.get(22));
-                        ac.body.rightFlapHealth = 0;
-                        state.addEvent("Right flap fully detached mid-flight.");
-                        phase3NoCommunications(input, rand, state, ac, prompts);
-                    }
-                } else {
-                    phase3NoCommunications(input, rand, state, ac, prompts);
-                }
+                attemptLanding(input, rand, prompts);
 
             } else if (choice2 == 2) {
-                System.out.println(prompts.get(9)); 
-                ac.body.rightFlapHealth = 0;
-                state.addEvent("Right flap fully detached. Aircraft destabilized.");
-
-                //emergecy descenct
-                System.out.println(prompts.get(23));
-                int choice3 = safeIntInput(input);
+                //no reporting
+                System.out.println(prompts.get(9));  //flap gets worse
+                System.out.println(prompts.get(18)); //flap detaches choice
+                int choice3 = input.nextInt();
                 if (choice3 == 1) {
-                    int roll = rand.nextInt(3);
-                    if (roll < 2) {
-                        System.out.println(prompts.get(24));  
-                        state.land = true;
-                    } else {
-                        System.out.println(prompts.get(13));  
-                        ac.body.fuselageHealth -= 50;
-                        state.land = true;
-                    }
+                    attemptLanding(input, rand, prompts);
                 } else {
-                    System.out.println(prompts.get(25));  
-                    endingCrash(state, ac);
+                    System.out.println(prompts.get(13)); //instability, crash
+                }
+
+            } else {
+                System.out.println("Invalid input.");
+            }
+
+        } else {
+
+            //fuel warning
+            System.out.println(prompts.get(22)); //low fuel gauge choice
+            int choice2 = input.nextInt();
+
+            if (choice2 == 1) {
+                //divert
+                System.out.println(prompts.get(23));
+                attemptLanding(input, rand, prompts);
+
+            } else if (choice2 == 2) {
+                //fuel puzzle questioin
+                System.out.println(prompts.get(24));
+                int answer = input.nextInt();
+
+                if (answer == 56) {
+                    //correct answer, enough fuel
+                    System.out.println(prompts.get(25));
+                    attemptLanding(input, rand, prompts);
+                } else {
+                    //incorrect answer, crash
+                    System.out.println(prompts.get(26));
                 }
 
             } else {
                 System.out.println("Invalid input.");
             }
         }
-        if (!state.crash) {
-            endingSuccess(state, ac);
-        }
     }
 
-    static void phase3NoCommunications(Scanner input, Random rand,
-            FlightState state, AircraftHealth ac, ArrayList<PromptFormat> prompts) {
+    //landing gear (before every landing)
+    static void attemptLanding(Scanner input, Random rand, ArrayList<promptFormat> prompts) {
+        System.out.println(prompts.get(19));
+        int gearChoice = input.nextInt();
 
-        System.out.println(prompts.get(26)); 
-        int choice = safeIntInput(input);
-
-        if (choice == 1) {
-            System.out.println(prompts.get(27));
-            if (ac.sys.rightEngine) {
-                System.out.println(prompts.get(28)); 
-                state.land = true;
+        if (gearChoice == 1) {
+            int gearRoll = rand.nextInt(2);
+            if (gearRoll == 1) {
+                System.out.println(prompts.get(20)); 
+                System.out.println(prompts.get(12)); 
             } else {
-                System.out.println(prompts.get(29));  
-                int roll = rand.nextInt(2);
-                if (roll == 1) {
-                    System.out.println(prompts.get(24));  
-                    state.land = true;
+                System.out.println(prompts.get(21)); 
+                int bellyRoll = rand.nextInt(2);
+                if (bellyRoll == 1) {
+                    System.out.println(prompts.get(12)); 
                 } else {
-                    endingCrash(state, ac);
+                    System.out.println(prompts.get(13)); 
                 }
             }
-        } else if (choice == 2) {
-            System.out.println(prompts.get(30)); 
-            ac.body.fuselageHealth -= 20;
-            state.land = true;
         } else {
-            System.out.println("Invalid input.");
-            state.land = true;
-        }
-    }
-
-    static void phase3ContinueFlight(Scanner input, Random rand,
-            FlightState state, AircraftHealth ac, NavStatus nav,
-            ArrayList<PromptFormat> prompts) {
-
-        System.out.println(prompts.get(31)); 
-        int choice = safeIntInput(input);
-
-        if (choice == 1) {
-            System.out.println(prompts.get(32));  
-            int answer = safeIntInput(input);
-            if (answer == 45) {
-                System.out.println(prompts.get(33));  
-                state.land = true;
+            System.out.println(prompts.get(21)); 
+            int bellyRoll = rand.nextInt(2);
+            if (bellyRoll == 1) {
+                System.out.println(prompts.get(12));
             } else {
-                System.out.println(prompts.get(34));  
-                nav.diversionApproved = true;
-                System.out.println(prompts.get(21)); 
-                state.land = true;
-            }
-        } else {
-            int roll = rand.nextInt(2);
-            if (roll == 1) {
-                System.out.println(prompts.get(35));  
-                state.land = true;
-            } else {
-                System.out.println(prompts.get(36)); 
-                endingCrash(state, ac);
+                System.out.println(prompts.get(13)); 
             }
         }
     }
-
-    static void endingCrash(FlightState state, AircraftHealth ac) {
-        state.crash = true;
-        System.out.println("\n╔══════════════════════════════════════╗");
-        System.out.println("║         FLIGHT ENDED IN CRASH         ║");
-        System.out.println("╚══════════════════════════════════════╝");
-        System.out.println(state.getFlightLog());
-    }
-
-    static void endingSuccess(FlightState state, AircraftHealth ac) {
-        System.out.println("\n╔══════════════════════════════════════╗");
-        System.out.println("║       FLIGHT COMPLETED SAFELY         ║");
-        System.out.println("╚══════════════════════════════════════╝");
-        System.out.println("Aircraft structural integrity: " + ac.body.fuselageHealth + "%");
-        System.out.println(state.getFlightLog());
-    }
-
-    static int safeIntInput(Scanner sc) {
-        while (!sc.hasNextInt()) {
-            System.out.println("Please enter a valid number.");
-            sc.next();
-        }
-        return sc.nextInt();
-    }
 }
 
-// --------------------------------------------------------------------
+// -----------------------------------------------------
 
-class FlightPath {
+//create flightpath variables
+class flightPath {
 
-    private final String company, aircraft, startPoint, endPoint;
-    private final int miles, elapsed;
+    private String company, aircraft, startPoint, endPoint;
+    private int miles, elapsed;
+    private String flightSum;
 
-    public FlightPath(String company, String aircraft, String start,
-                      String end, int miles, int elapsed) {
-        this.company    = company;
-        this.aircraft   = aircraft;
-        this.startPoint = start;
-        this.endPoint   = end;
-        this.miles      = miles;
-        this.elapsed    = elapsed;
-    }
-
-    public String getAircraft() { return aircraft; }
-    public int getMiles()       { return miles; }
-
-    @Override
-    public String toString() {
-        return "\nToday you will be flying a " + company + " " + aircraft
-             + " from " + startPoint + " to " + endPoint
-             + ".\nThe trip will cover " + miles
-             + " miles and take an estimated " + elapsed + " minutes.\n";
-    }
-}
-
-// --------------------------------------------------------------------
-
-class PromptFormat {
-
-    private final String[] lines;
-
-    public PromptFormat(String inText) {
-        lines = inText.split("~");
+    public flightPath(String inCompany, String inAircraft, String inStart,
+                      String inEnd, int inMiles, int inElapsed) {
+        company    = inCompany;
+        aircraft   = inAircraft;
+        startPoint = inStart;
+        endPoint   = inEnd;
+        miles      = inMiles;
+        elapsed    = inElapsed;
+        this.flightSum = "\nToday you will be flying a " + company + " " + aircraft
+                + " from " + startPoint + " to " + endPoint
+                + ". The trip will cover " + miles
+                + " miles and take an estimated " + elapsed + " minutes.";
     }
 
     @Override
     public String toString() {
-        return String.join("\n", lines);
+        return flightSum;
     }
 }
 
-// --------------------------------------------------------------------
+// -----------------------------------------------------
 
-//flight progress tracking
-class FlightState {
+//format strings for promtpts
+class promptFormat {
 
-    public boolean land  = false;
-    public boolean crash = false;
+    private String textBody;
+    private String[] newText;
 
-    private final FlightPath flight;
-    private final List<String> eventLog = new ArrayList<>();
-
-    public FlightState(FlightPath flight) {
-        this.flight = flight;
-        addEvent("Departed on " + flight.toString().trim());
+    public promptFormat(String inText) {
+        textBody = inText;
+        newText  = textBody.split("\\~");
     }
 
-    public void addEvent(String event) {
-        eventLog.add(event);
+    @Override
+    public String toString() {
+        return String.join("\n", newText);
     }
-
-    public String getFlightLog() {
-        StringBuilder sb = new StringBuilder("\n── Flight Log ──\n");
-        for (int i = 0; i < eventLog.size(); i++) {
-            sb.append("  ").append(i + 1).append(". ").append(eventLog.get(i)).append("\n");
-        }
-        return sb.toString();
-    }
-}
-
-// --------------------------------------------------------------------
-
-//navigation status
-class NavStatus {
-    public boolean atcContactEstablished = false;
-    public boolean diversionApproved     = false;
-    public String  squawkCode            = "1200";  // default VFR squawk
-}
-
-// --------------------------------------------------------------------
-
-//health tracking variables
-class AircraftHealth {
-    public final SysHealth  sys  = new SysHealth();
-    public final BodyHealth body = new BodyHealth();
-
-    public boolean isFlightworthy() {
-        return (sys.leftEngine || sys.rightEngine)
-            && sys.controlsOn
-            && body.fuselageHealth > 0;
-    }
-}
-
-// --------------------------------------------------------------------
-
-class SysHealth {
-    public int     sysIntegrity = 100;
-    public boolean commsOn      = true;
-    public boolean controlsOn   = true;
-    public boolean leftEngine   = true;
-    public boolean rightEngine  = true;
-
-    public boolean commsFail()        { return commsOn      = false; }
-    public boolean controlsFail()     { return controlsOn   = false; }
-    public boolean leftEngineFail()   { return leftEngine   = false; }
-    public boolean rightEngineFail()  { return rightEngine  = false; }
-}
-
-// --------------------------------------------------------------------
-
-class BodyHealth {
-    public int fuselageHealth   = 100;
-    public int leftWingHealth   = 100;
-    public int rightWingHealth  = 100;
-    //for stormy branch:
-    public int rightFlapHealth  = 100;
 }
