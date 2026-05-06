@@ -10,7 +10,7 @@ package flightsim;
  * @author OToy2026
  */
 
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 
@@ -19,11 +19,11 @@ public class FlightSim {
     public static void main(String[] args) {
 
         System.out.println("""
-                      ======================================
-                           Welcome to Flight Simulator.
-                          ==============================""");
+                      =====================================
+                           Welcome to Flight Simulator
+                          =============================""");
 
-        //load flight paths
+        //load flight list
         Path path1 = Paths.get("Info", "flights.txt");
         ArrayList<flightPath> flights = new ArrayList<>();
 
@@ -71,72 +71,98 @@ public class FlightSim {
 
         Scanner input = new Scanner(System.in);
 
-        //pre-takeoff
+        //ask for player name
+        System.out.print("Enter your name: ");
+        String playerName = input.next();
+
+        //set score
+        int score = 0;
+
+        //atc check (pre takeoff)
         System.out.println(prompts.get(0));
         int choice1 = input.nextInt();
         boolean verifiedWithATC;
         if (choice1 == 1) {
-            System.out.println(prompts.get(1)); 
+            System.out.println(prompts.get(1));
             verifiedWithATC = true;
+            score += 10; 
         } else {
-            System.out.println(prompts.get(2)); 
+            System.out.println(prompts.get(2));
             verifiedWithATC = false;
+            score -= 5; 
         }
 
-        //random weather/event
+        //weather event
         int rand1 = rand.nextInt(3);
+        boolean survived = false;
 
         if (rand1 == 1) {
 
-            //clear weather
+            //clear weather, bird strike
             System.out.println(prompts.get(3));
             int choice2 = input.nextInt();
 
             if (choice2 == 1) {
-                //glide
+                //glide option
+                score += 10;
                 System.out.println(prompts.get(5));
                 int choice3 = input.nextInt();
 
                 if (choice3 == 1) {
                     //attempt to fix radio
+                    score += 5;
                     System.out.println(prompts.get(6));
                     int answer = input.nextInt();
 
                     if (answer == 132) {
-                        System.out.println(prompts.get(7));  //correct answer
-                        System.out.println(prompts.get(10)); //atc guides
-                        attemptLanding(input, rand, prompts); //landing gear check
+                        score += 20; 
+                        System.out.println(prompts.get(7));
+                        System.out.println(prompts.get(10));
+                        survived = attemptLanding(input, rand, prompts, score);
+                        score = updateLandingScore(score, survived);
                     } else {
-                        System.out.println(prompts.get(8));  //incorrect answer
-                        System.out.println(prompts.get(11)); //independent choice
+                        score -= 10; 
+                        System.out.println(prompts.get(8));
+                        System.out.println(prompts.get(11));
                         int choice4 = input.nextInt();
                         if (choice4 == 1) {
-                            attemptLanding(input, rand, prompts);
+                            score += 5;
+                            survived = attemptLanding(input, rand, prompts, score);
+                            score = updateLandingScore(score, survived);
                         } else {
-                            System.out.println(prompts.get(14)); //keep flying, engine fails
+                            System.out.println(prompts.get(14));
+                            score -= 20;
                         }
                     }
 
                 } else {
-                    //no radio option
-                    System.out.println(prompts.get(9));  //engine error
-                    System.out.println(prompts.get(11)); //attempt landing choice
+                    //no radio attempt
+                    score -= 5;
+                    System.out.println(prompts.get(9));
+                    System.out.println(prompts.get(11));
                     int choice4 = input.nextInt();
                     if (choice4 == 1) {
-                        attemptLanding(input, rand, prompts);
+                        score += 5;
+                        survived = attemptLanding(input, rand, prompts, score);
+                        score = updateLandingScore(score, survived);
                     } else {
-                        System.out.println(prompts.get(14)); //keep flying, engine fails
+                        System.out.println(prompts.get(14));
+                        score -= 20;
                     }
                 }
 
             } else if (choice2 == 2) {
                 //full throttle option
+                score -= 10;
                 System.out.println(prompts.get(15));
                 int choice3 = input.nextInt();
                 if (choice3 == 1) {
-                    attemptLanding(input, rand, prompts);
+                    score += 5;
+                    survived = attemptLanding(input, rand, prompts, score);
+                    score = updateLandingScore(score, survived);
                 } else {
-                    System.out.println(prompts.get(13)); //push to far, crash
+                    System.out.println(prompts.get(13));
+                    score -= 20;
                 }
 
             } else {
@@ -145,27 +171,35 @@ public class FlightSim {
 
         } else if (rand1 == 0) {
 
-            //stormy weather, flap comes loose
+            //stormy weather, flap loose
             System.out.println(prompts.get(4));
             int choice2 = input.nextInt();
 
             if (choice2 == 1) {
+                //call atc option
+                score += 10;
                 if (verifiedWithATC) {
-                    System.out.println(prompts.get(16)); //atc fast reponse
+                    score += 10;  
+                    System.out.println(prompts.get(16));
                 } else {
-                    System.out.println(prompts.get(17)); //atc slow response
+                    System.out.println(prompts.get(17));
                 }
-                attemptLanding(input, rand, prompts);
+                survived = attemptLanding(input, rand, prompts, score);
+                score = updateLandingScore(score, survived);
 
             } else if (choice2 == 2) {
-                //no reporting
-                System.out.println(prompts.get(9));  //flap gets worse
-                System.out.println(prompts.get(18)); //flap detaches choice
+                //dont report option
+                score -= 10;
+                System.out.println(prompts.get(9));
+                System.out.println(prompts.get(18));
                 int choice3 = input.nextInt();
                 if (choice3 == 1) {
-                    attemptLanding(input, rand, prompts);
+                    score += 5;
+                    survived = attemptLanding(input, rand, prompts, score);
+                    score = updateLandingScore(score, survived);
                 } else {
-                    System.out.println(prompts.get(13)); //instability, crash
+                    System.out.println(prompts.get(13));
+                    score -= 20;
                 }
 
             } else {
@@ -175,25 +209,28 @@ public class FlightSim {
         } else {
 
             //fuel warning
-            System.out.println(prompts.get(22)); //low fuel gauge choice
+            System.out.println(prompts.get(22));
             int choice2 = input.nextInt();
 
             if (choice2 == 1) {
-                //divert
+                //divert option
+                score += 10;
                 System.out.println(prompts.get(23));
-                attemptLanding(input, rand, prompts);
+                survived = attemptLanding(input, rand, prompts, score);
+                score = updateLandingScore(score, survived);
 
             } else if (choice2 == 2) {
-                //fuel puzzle questioin
+                //calculation option
+                score += 5;
                 System.out.println(prompts.get(24));
                 int answer = input.nextInt();
-
                 if (answer == 56) {
-                    //correct answer, enough fuel
+                    score += 20; 
                     System.out.println(prompts.get(25));
-                    attemptLanding(input, rand, prompts);
+                    survived = attemptLanding(input, rand, prompts, score);
+                    score = updateLandingScore(score, survived);
                 } else {
-                    //incorrect answer, crash
+                    score -= 20; 
                     System.out.println(prompts.get(26));
                 }
 
@@ -201,42 +238,109 @@ public class FlightSim {
                 System.out.println("Invalid input.");
             }
         }
+
+        //save and display scores
+        saveScore(playerName, score);
+        displayLeaderboard();
     }
 
-    //landing gear (before every landing)
-    static void attemptLanding(Scanner input, Random rand, ArrayList<promptFormat> prompts) {
+    //landing gear check
+    //returns true if the player survive, false if they crash
+    static boolean attemptLanding(Scanner input, Random rand,
+                                  ArrayList<promptFormat> prompts, int score) {
         System.out.println(prompts.get(19));
         int gearChoice = input.nextInt();
 
         if (gearChoice == 1) {
             int gearRoll = rand.nextInt(2);
             if (gearRoll == 1) {
-                System.out.println(prompts.get(20)); 
-                System.out.println(prompts.get(12)); 
+                System.out.println(prompts.get(20));
+                System.out.println(prompts.get(12));
+                return true;
             } else {
-                System.out.println(prompts.get(21)); 
+                System.out.println(prompts.get(21));
                 int bellyRoll = rand.nextInt(2);
                 if (bellyRoll == 1) {
-                    System.out.println(prompts.get(12)); 
+                    System.out.println(prompts.get(12));
+                    return true;
                 } else {
-                    System.out.println(prompts.get(13)); 
+                    System.out.println(prompts.get(13));
+                    return false;
                 }
             }
         } else {
-            System.out.println(prompts.get(21)); 
+            System.out.println(prompts.get(21));
             int bellyRoll = rand.nextInt(2);
             if (bellyRoll == 1) {
                 System.out.println(prompts.get(12));
+                return true;
             } else {
-                System.out.println(prompts.get(13)); 
+                System.out.println(prompts.get(13));
+                return false;
             }
         }
     }
+
+    //landing bonus to score
+    static int updateLandingScore(int score, boolean survived) {
+        if (survived) {
+            return score + 30;   // survival bonus
+        } else {
+            return score - 30;   // crash penalty
+        }
+    }
+
+    //add to scores.txt
+    static void saveScore(String name, int score) {
+        Path scoresPath = Paths.get("Info", "scores.txt");
+        try (BufferedWriter writer = Files.newBufferedWriter(
+                scoresPath,
+                StandardOpenOption.CREATE,
+                StandardOpenOption.APPEND)) {
+            writer.write(name + "," + score);
+            writer.newLine();
+        } catch (IOException e) {
+            System.err.println("Could not save score: " + e.getMessage());
+        }
+    }
+
+    //read scores and display top 5
+    static void displayLeaderboard() {
+        Path scoresPath = Paths.get("Info", "scores.txt");
+        ArrayList<String[]> scores = new ArrayList<>();
+
+        if (Files.exists(scoresPath)) {
+            try (Scanner scan3 = new Scanner(scoresPath)) {
+                while (scan3.hasNextLine()) {
+                    String line = scan3.nextLine().trim();
+                    if (!line.isEmpty()) {
+                        String[] parts = line.split(",");
+                        if (parts.length == 2) {
+                            scores.add(parts);
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                System.err.println("Could not read scores: " + e.getMessage());
+                return;
+            }
+        }
+
+        //sort by score
+        scores.sort((a, b) -> Integer.parseInt(b[1]) - Integer.parseInt(a[1]));
+
+        System.out.println("\n=== LEADERBOARD (Top 5) ===");
+        int display = Math.min(5, scores.size());
+        for (int i = 0; i < display; i++) {
+            System.out.println((i + 1) + ". " + scores.get(i)[0]
+                    + " - " + scores.get(i)[1] + " pts");
+        }
+        System.out.println("===========================");
+    }
 }
 
-// -----------------------------------------------------
+// ----------------------------------------------
 
-//create flightpath variables
 class flightPath {
 
     private String company, aircraft, startPoint, endPoint;
@@ -263,9 +367,8 @@ class flightPath {
     }
 }
 
-// -----------------------------------------------------
+// ----------------------------------------------
 
-//format strings for promtpts
 class promptFormat {
 
     private String textBody;
