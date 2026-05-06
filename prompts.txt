@@ -1,24 +1,75 @@
-Before takeoff, would you like to verify your flight path with Air Traffic Control? Type 1 to verify, type 2 to takeoff immediately.-
+Before takeoff, would you like to verify your flight path with Air Traffic Control?~Type 1 to verify, type 2 to takeoff immediately.-
 
-Air Traffic Control has approved your flight path. You proceed to the runway, and successfully take off.-
+Air Traffic Control has approved your flight path. You proceed to the runway and successfully take off.-
 
-You proceed to the runway without double checking your flight path, and you successfully take off.-
+You proceed to the runway without verifying your flight path, and successfully take off.-
 
-The weather today is clear and sunny, and you steadily begin elevating to cruising altitude. But as you start to relax a little, you see something coming in the distance.~BIRDS!!! It's too late to avoid them, and you hit the birds head on. The cockpit lights up with error messages, you've lost your right engine!~You can either type 1 to reduce engine speed and aim for a glide, or you can type 2 to go full throttle in both engines and attempt to get the birds' unstuck.-
+The weather today is clear and sunny, and you steadily begin climbing to cruising altitude. But as you start to relax, you spot something in the distance.~BIRDS! It's too late to swerve — you hit them head on. The cockpit lights up with alarms. You've lost your right engine!~Type 1 to reduce throttle and attempt a glide, or type 2 to go full throttle and try to shake the debris loose.-
 
-The weather today is rather stormy, so while elevating to cruising altitude you start to check your weather instruments to make sure the you know where you'll be hitting turbulence.~But before you can get a full reading, the plane hits a massive patch of bumpy air. The entire cockpit shakes and lights up with error messages, a flap on your right wing came loose!~Type 1 to call ATC on the radio to report your situation, or type 2 to keep flying without reporting.-
+The weather today is rather stormy. As you climb through the clouds you monitor your instruments carefully.~Before you finish your scan, the plane slams into a massive patch of turbulence. Lights flash across the panel — a flap on your right wing has come loose!~Type 1 to call ATC on the radio to report your situation, or type 2 to keep flying without reporting.-
 
-You slowly let off the throttle, hoping to glide for a little until the problem solves itself. Type 1 to call ATC on the radio to report your situation, or type 2 to keep flying without reporting.-
+You ease off the throttle and the aircraft settles into a steady glide. The cockpit is quieter now, but the right-engine warning light refuses to go out.~You reach for the radio to call ATC — but the handset crackles and goes dead. Looks like the birds hit that too.~Type 1 to attempt to repair the radio, or type 2 to stay quiet and handle it yourself.-
 
-Huh. It seems like your radio controls also got messed up, because you can't seem to get ahold of ATC. It looks like you're gonna have to fix it yourself.~To fix the radio controls, correctly identify the product of the following operation: 11 * 12 = ?-
+To repair the radio, correctly identify the product of the following operation:~  11 × 12 = ?-
 
-Correct! You successfully fixed your radio controls, and call in to ATC to report your issue.-
+Correct! You splice the loose wire and the radio crackles back to life. You key the mic and report your situation to ATC.-
 
-Incorrect. Looks like you're on your own for the rest of this flight.-
+Incorrect. The radio stays dead. You're on your own for the rest of this flight.-
 
-You continue ascending to cruising altitude, but you hear a noise on your right wing getting louder and louder, until you look over and see the loose flap almost completely dislodged.~As you're inspecting the flap from the cockpit, it fully detaches and flies off the wing. Uh oh.-
+You continue ascending, but you notice the right-engine error light is still blinking. It's not getting better on its own.-
 
-You continue ascending to cruising altitude, but you notice that your right engine still has an error.
+ATC acknowledges your mayday. They offer you two options.~Type 1 to divert to the nearest airport for an emergency landing, or type 2 to continue to your original destination on one engine.-
 
+ATC vectors you toward the nearest airport. You configure for a single-engine approach — flaps, gear down, speeds checked.~The runway comes into view and your hands tighten on the controls.-
 
+Wheels down — smooth! The aircraft rolls to a stop and emergency crews are waiting on the taxiway. A textbook emergency landing.-
 
+The touchdown is hard. The aircraft bounces once, shudders, but stays on the runway. Structural damage is noted, but everyone is safe.-
+
+ATC confirms you can continue on one engine if fuel allows. You maintain altitude and press on toward your destination.-
+
+You push both throttles to the stops. The left engine screams under the extra load — and then it coughs, stutters, and seizes. Both engines are now dead.~The aircraft enters an uncontrolled dive.-
+
+ATC responds immediately. Because you already verified your path before departure, they have your full flight plan on file.~They direct you to reduce speed and begin a controlled descent to a nearby field.-
+
+ATC acknowledges your call but needs to confirm your identity before issuing an emergency diversion.~They ask you to squawk an emergency code. Type the standard emergency squawk code now: -
+
+Emergency declared! ATC clears all traffic and vectors you toward the nearest runway.-
+
+ATC can't confirm your code. You're not in their system. You'll have to manage this yourself.-
+
+ATC gives you a choice: divert to a nearby airport or press on and hope the flap holds.~Type 1 to divert immediately, or type 2 to continue to your original destination.-
+
+ATC guides you in beautifully. You touch down without incident and the ground crew patches the flap. Impressive airmanship.-
+
+You push on through the storm. The rattling grows louder — and suddenly the flap tears free entirely. The aircraft yaws sharply to the right!-
+
+You soldier on without telling anyone. The rattling grows into a groan — then a bang. The flap is gone.~The aircraft yaws hard to the right and starts to roll. You fight the controls with everything you have.~Type 1 to initiate an emergency descent and find a place to land, or type 2 to try to maintain altitude and continue the route.-
+
+With both hands on the yoke you push the nose down into a steep descent. Buildings and fields rush up at you through the rain.~Type 1 to pick the open highway ahead as a landing strip, or type 2 to hold on and look for an actual runway.-
+
+The highway is straight and clear. You slam the gear down and flare at the last second.~Sparks fly as the belly scrapes the tarmac, but the aircraft comes to a stop. You made it.-
+
+You hold altitude too long. With an asymmetric wing the aircraft snaps into a flat spin.~Recovery is impossible.-
+
+The turbulence is building fast. You can see the dark wall of it on the weather radar.~Type 1 to climb above it, or type 2 to descend below it and accept a rougher ride.-
+
+You push the nose up and add power. The aircraft shudders as it claws for altitude.-
+
+You punch through the top of the cell and break into clear, smooth air. Calm at last. You resume your route and land without further incident.-
+
+The airspeed drops dangerously as you try to climb on one engine. The stall warning blares!~You shove the nose down to recover speed. Everything shakes. You hold on.-
+
+The aircraft bucks and rattles through the turbulent layer for several long minutes, but eventually breaks out into calmer air below. The fuselage has taken a beating, but you're flying.-
+
+You're getting close to your destination, but the fuel gauge on the right tank is reading low — possibly a sensor knocked loose by the bird strike.~Type 1 to do a careful fuel calculation before continuing, or type 2 to trust the gauge and press on.-
+
+Your remaining fuel must cover the last leg of the journey.~The trip from your start is 1,078 miles. Your aircraft burns 24 miles per gallon on one engine.~You started with 90 gallons of usable fuel. How many gallons do you have left? (Round to nearest whole number)-
+
+Correct! Your math checks out — you have a comfortable margin. You continue to your destination and touch down smoothly.-
+
+Your calculation is off, and when you cross-check it against the backup gauge you realise fuel is critically low.~ATC immediately issues an amended clearance. You divert to the closest field and land with barely a cupful to spare.-
+
+You decide to trust the gauge and push on. The destination runway comes into view just as the fuel warning horn sounds — you're running on fumes.~Gear down, flaps set — you squeeze out every last foot of glide and touch down right on the numbers. Incredible.-
+
+You decide to skip the fuel check. Thirty minutes from your destination both engines flame out simultaneously.~The aircraft glides in eerie silence toward terrain below.-
