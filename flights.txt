@@ -1,5 +1,5 @@
 Southwest,Boeing 737,San Diego,Denver,1078,150
 JetBlue,Boeing 737,Austin,Oakland,1497,230
-Japan Airlines,Boeing 787,San Francisco,Tokyo,5148,635
+Delta,Boeing 787,San Francisco,New York,2565,345
 DHL,Boeing 747,Mexico City,Anchorage,3779,710
-British Airways,Airbus A380,Singapore,London,6765,840
+Frontier,Airbus A320,Salt Lake City,Miami,2086,275
