@@ -13,10 +13,11 @@ package flightsim;
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
+import javax.sound.sampled.*;
 
 public class FlightSim {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 
         System.out.println("""
                       =====================================
@@ -242,6 +243,7 @@ public class FlightSim {
         //save and display scores
         saveScore(playerName, score);
         displayLeaderboard();
+        Thread.sleep(2000); // <-- added: give audio time to finish
     }
 
     //landing gear check
@@ -283,6 +285,7 @@ public class FlightSim {
 
     //landing bonus to score
     static int updateLandingScore(int score, boolean survived) {
+        playSound(survived);
         if (survived) {
             return score + 30;   // survival bonus
         } else {
@@ -336,7 +339,25 @@ public class FlightSim {
                     + " - " + scores.get(i)[1] + " pts");
         }
         System.out.println("===========================");
+       
     }
+    
+static void playSound(boolean success) {
+    String fileName = success ? "success.wav" : "crash.wav";
+    Path soundPath = Paths.get("Info", fileName);
+
+    try {
+        AudioInputStream audio = AudioSystem.getAudioInputStream(soundPath.toFile());
+        Clip clip = AudioSystem.getClip();
+        clip.open(audio);
+        clip.start();
+        Thread.sleep(clip.getMicrosecondLength() / 1000);
+        clip.close();
+        audio.close();
+    } catch (Exception e) {
+        System.out.println("Sound error: " + e.getMessage());
+    }
+}
 }
 
 // ----------------------------------------------
@@ -384,3 +405,4 @@ class promptFormat {
         return String.join("\n", newText);
     }
 }
+
